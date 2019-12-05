@@ -1,0 +1,11 @@
+//
+//  common_config.xcconfig
+//  {{cookiecutter.framework_name}}
+//
+//  Created by Lucas Paim on 05/12/19.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://help.apple.com/xcode/#/dev745c5c974
+BUILD_LIBRARY_FOR_DISTRIBUTION=YES
+

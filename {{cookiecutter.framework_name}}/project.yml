@@ -1,0 +1,20 @@
+name: {{cookiecutter.framework_name}}
+
+options:
+  bundleIdPrefix: {{cookiecutter.bundle_id}}
+
+configFiles:
+  Debug: {{cookiecutter.framework_name}}/common_config.xcconfig
+  Release: {{cookiecutter.framework_name}}/common_config.xcconfig
+
+
+targets:
+  {{cookiecutter.framework_name}}:
+    type: framework
+    platform: iOS
+    sources: [{{cookiecutter.framework_name}}]
+    settings:
+      BUILD_LIBRARY_FOR_DISTRIBUTION: "YES"
+    configFiles:
+      Debug: {{cookiecutter.framework_name}}/common_config.xcconfig
+      Release: {{cookiecutter.framework_name}}/common_config.xcconfig
