@@ -12,7 +12,7 @@ if [ -e ${LOCKFILE} ] && kill -0 `cat ${LOCKFILE}`; then
 fi
 
 
-trap "rm -f ${LOCKFILE}; exit" INT TERM EXIT
+trap "rm -f ${LOCKFILE}; rm -f ${LOCKFILE}; exit" INT TERM EXIT
 echo $$ > ${LOCKFILE}
 
 xcodebuild archive -scheme {{cookiecutter.framework_name}} \
