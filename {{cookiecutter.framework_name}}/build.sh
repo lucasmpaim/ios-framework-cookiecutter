@@ -3,6 +3,8 @@
 LOCKFILE=/tmp/.lock_{{cookiecutter.framework_name}}
 TMP_DIR=$(mktemp -d -t {{cookiecutter.framework_name}})
 
+WORKSPACE_DIR=$1
+
 rm -r "./{{cookiecutter.framework_name}}.xcframework"
 
 
@@ -15,20 +17,24 @@ fi
 trap "rm -f ${LOCKFILE}; rm -f ${LOCKFILE}; exit" INT TERM EXIT
 echo $$ > ${LOCKFILE}
 
-xcodebuild archive -scheme {{cookiecutter.framework_name}} \
- -archivePath "${TMP_DIR}/iOS/{{cookiecutter.framework_name}}" \
-  -sdk iphoneos \
-   SKIP_INSTALL=NO \
-   BUILD_LIBRARIES_FOR_DISTRIBUTION=YES \
-   clean build
+xcodebuild archive \
+-scheme {{cookiecutter.framework_name}} \
+-workspace "${WORKSPACE_DIR}" \
+-archivePath "${TMP_DIR}/iOS/{{cookiecutter.framework_name}}" \
+-sdk iphoneos \
+SKIP_INSTALL=NO \
+BUILD_LIBRARIES_FOR_DISTRIBUTION=YES \
+clean build
 
 
-xcodebuild archive -scheme {{cookiecutter.framework_name}} \
- -archivePath "${TMP_DIR}/simulator/{{cookiecutter.framework_name}}" \
-  -sdk iphonesimulator \
-   SKIP_INSTALL=NO \
-   BUILD_LIBRARIES_FOR_DISTRIBUTION=YES \
-   clean build
+xcodebuild archive \
+-scheme {{cookiecutter.framework_name}} \
+-workspace "${WORKSPACE_DIR}" \
+-archivePath "${TMP_DIR}/simulator/{{cookiecutter.framework_name}}" \
+-sdk iphonesimulator \
+SKIP_INSTALL=NO \
+BUILD_LIBRARIES_FOR_DISTRIBUTION=YES \
+clean build
 
 
 xcodebuild -create-xcframework \
