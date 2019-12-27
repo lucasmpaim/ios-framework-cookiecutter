@@ -28,5 +28,5 @@ schemes:
         {{cookiecutter.framework_name}}: all
       postActions:
         - name: "Generate XCFramework"
-          script: "( exec > /tmp/xcode_build_{{cookiecutter.framework_name}}.log 2>&1; cd $SRCROOT && ./build.sh )"
+          script: "( exec > /tmp/xcode_build_BariTwoFactor.log 2>&1; cd $SRCROOT && ./build.sh \"$WORKSPACE_PATH\")"
           settingsTarget: {{cookiecutter.framework_name}}
