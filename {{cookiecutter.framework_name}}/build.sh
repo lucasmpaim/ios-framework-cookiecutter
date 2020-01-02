@@ -24,7 +24,7 @@ xcodebuild archive \
 -sdk iphoneos \
 SKIP_INSTALL=NO \
 BUILD_LIBRARIES_FOR_DISTRIBUTION=YES \
-clean build & \
+clean build 
 
 xcodebuild archive \
 -scheme {{cookiecutter.framework_name}} \
@@ -35,7 +35,6 @@ SKIP_INSTALL=NO \
 BUILD_LIBRARIES_FOR_DISTRIBUTION=YES \
 clean build
 
-wait
 
 xcodebuild -create-xcframework \
 	-framework "${TMP_DIR}/iOS/{{cookiecutter.framework_name}}.xcarchive/Products/Library/Frameworks/{{cookiecutter.framework_name}}.framework" \
