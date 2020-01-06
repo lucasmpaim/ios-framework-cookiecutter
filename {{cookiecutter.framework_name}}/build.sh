@@ -1,12 +1,13 @@
 #!/bin/bash
 
-LOCKFILE=/tmp/.lock_{{cookiecutter.framework_name}}
-TMP_DIR=$(mktemp -d -t {{cookiecutter.framework_name}})
-
 WORKSPACE_DIR=$1
+FRAMEWORK_NAME={{cookiecutter.framework_name}}
 
-rm -r "./{{cookiecutter.framework_name}}.xcframework"
+LOCKFILE=/tmp/.lock_$FRAMEWORK_NAME
+TMP_DIR=$(mktemp -d -t $FRAMEWORK_NAME)
 
+
+rm -r "./$FRAMEWORK_NAME.xcframework"
 
 if [ -e ${LOCKFILE} ] && kill -0 `cat ${LOCKFILE}`; then
     echo "already running"
@@ -17,29 +18,51 @@ fi
 trap "rm -f ${LOCKFILE}; rm -f ${LOCKFILE}; exit" INT TERM EXIT
 echo $$ > ${LOCKFILE}
 
-xcodebuild archive \
--scheme {{cookiecutter.framework_name}} \
--workspace "${WORKSPACE_DIR}" \
--archivePath "${TMP_DIR}/iOS/{{cookiecutter.framework_name}}" \
--sdk iphoneos \
-SKIP_INSTALL=NO \
-BUILD_LIBRARIES_FOR_DISTRIBUTION=YES \
-clean build 
+
+notify_error_on_build()
+{
+    terminal-notifier -title BariBuild -message "Problemas ao compilar o módulo $FRAMEWORK_NAME" -sound default
+}
 
 xcodebuild archive \
--scheme {{cookiecutter.framework_name}} \
--workspace "${WORKSPACE_DIR}" \
--archivePath "${TMP_DIR}/simulator/{{cookiecutter.framework_name}}" \
--sdk iphonesimulator \
-SKIP_INSTALL=NO \
-BUILD_LIBRARIES_FOR_DISTRIBUTION=YES \
-clean build
+	-scheme $FRAMEWORK_NAME \
+	-workspace "${WORKSPACE_DIR}" \
+	-archivePath "${TMP_DIR}/iOS/$FRAMEWORK_NAME" \
+	-sdk iphoneos \
+	SKIP_INSTALL=NO \
+	BUILD_LIBRARIES_FOR_DISTRIBUTION=YES \
+	clean build
+
+if [[ $? != 0 ]]; then
+	notify_error_on_build
+    exit -1
+fi
+
+xcodebuild archive \
+	-scheme $FRAMEWORK_NAME \
+	-workspace "${WORKSPACE_DIR}" \
+	-archivePath "${TMP_DIR}/simulator/$FRAMEWORK_NAME" \
+	-sdk iphonesimulator \
+	SKIP_INSTALL=NO \
+	BUILD_LIBRARIES_FOR_DISTRIBUTION=YES \
+	clean build
+
+if [[ $? != 0 ]]; then
+	notify_error_on_build
+    exit -1
+fi
 
 
 xcodebuild -create-xcframework \
-	-framework "${TMP_DIR}/iOS/{{cookiecutter.framework_name}}.xcarchive/Products/Library/Frameworks/{{cookiecutter.framework_name}}.framework" \
-	-framework "${TMP_DIR}/simulator/{{cookiecutter.framework_name}}.xcarchive/Products/Library/Frameworks/{{cookiecutter.framework_name}}.framework" \
-	-output "./{{cookiecutter.framework_name}}.xcframework"
+	-framework "${TMP_DIR}/iOS/$FRAMEWORK_NAME.xcarchive/Products/Library/Frameworks/$FRAMEWORK_NAME.framework" \
+	-framework "${TMP_DIR}/simulator/$FRAMEWORK_NAME.xcarchive/Products/Library/Frameworks/$FRAMEWORK_NAME.framework" \
+	-output "./$FRAMEWORK_NAME.xcframework"
+
+if [[ $? != 0 ]]; then
+	notify_error_on_build
+    exit -1
+fi
 
 rm -f ${LOCKFILE}
 rm -r ${TMP_DIR}
+
