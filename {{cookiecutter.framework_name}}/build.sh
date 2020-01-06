@@ -21,7 +21,7 @@ echo $$ > ${LOCKFILE}
 
 notify_error_on_build()
 {
-    terminal-notifier -title BariBuild -message "Problemas ao compilar o módulo $FRAMEWORK_NAME" -sound default
+    terminal-notifier -title BariBuild -message "Problemas ao compilar o módulo $FRAMEWORK_NAME" -sound default -appIcon "https://media.licdn.com/dms/image/C4E0BAQGZ108LeTMGbA/company-logo_200_200/0?e=2159024400&v=beta&t=YOk8DxE2UfG3FUbrVoVuWlpme0c0PtISssG_S5yKdQE"
 }
 
 xcodebuild archive \
