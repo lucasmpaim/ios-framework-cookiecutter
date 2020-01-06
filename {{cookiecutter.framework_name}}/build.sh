@@ -34,7 +34,7 @@ xcodebuild archive \
 	clean build
 
 if [[ $? != 0 ]]; then
-	notify_error_on_build
+    notify_error_on_build
     exit -1
 fi
 
@@ -48,7 +48,7 @@ xcodebuild archive \
 	clean build
 
 if [[ $? != 0 ]]; then
-	notify_error_on_build
+    notify_error_on_build
     exit -1
 fi
 
@@ -59,7 +59,7 @@ xcodebuild -create-xcframework \
 	-output "./$FRAMEWORK_NAME.xcframework"
 
 if [[ $? != 0 ]]; then
-	notify_error_on_build
+    notify_error_on_build
     exit -1
 fi
 
