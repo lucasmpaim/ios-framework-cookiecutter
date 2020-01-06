@@ -7,12 +7,12 @@ LOCKFILE=/tmp/.lock_$FRAMEWORK_NAME
 TMP_DIR=$(mktemp -d -t $FRAMEWORK_NAME)
 
 
-rm -r "./$FRAMEWORK_NAME.xcframework"
-
 if [ -e ${LOCKFILE} ] && kill -0 `cat ${LOCKFILE}`; then
     echo "already running"
     exit
 fi
+
+rm -r "./$FRAMEWORK_NAME.xcframework"
 
 
 trap "rm -f ${LOCKFILE}; rm -f ${LOCKFILE}; exit" INT TERM EXIT
